@@ -62,9 +62,9 @@ server.post('/api/zoos', (req,res) => {
 })
 
 server.delete('/api/zoos/:id', async (req, res) => {
-  const id = await db('zoos').where({id: req.params.id})
+  const id = await Zoos.findById(req.params.id)
   //console.log(id.length)
-  db('zoos').where({id: req.params.id}).del()
+  Zoos.remove(req.params.id)
   .then(zoo => {
     //console.log(`the length of the id is ${id.length}`)
     if (id.length !== 0) {
@@ -79,9 +79,9 @@ server.delete('/api/zoos/:id', async (req, res) => {
 })
 
 server.put('/api/zoos/:id', async (req, res) => {
-  const id = await db('zoos').where({id: req.params.id})
+  const id = await Zoos.findById(req.params.id)
   //console.log(id.length)
-  db('zoos').where({id: req.params.id}).update(req.body)
+  Zoos.update(req.params.id, req.body)
   .then(zoo => {
     //console.log(`the length of the id is ${id.length}`)
     if (id.length !== 0) {
