@@ -14,7 +14,7 @@ module.exports = {
      findById,
      update,
      remove, 
-    // add
+     add
 }
 
 function find() {
@@ -35,4 +35,8 @@ function update(id, changes) {
 
 function remove(id) {
     return db('zoos').where({id: id}).del()
+}
+
+function add(body) {
+    return db('zoos').insert(body)
 }

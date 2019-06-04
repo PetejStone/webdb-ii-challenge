@@ -44,9 +44,9 @@ server.get('/api/zoos/:id', async (req, res) => {
 })
 
 server.post('/api/zoos', (req,res) => {
-  db('zoos').insert(req.body, 'id')
+  Zoos.add(req.body)
   .then(newItem => {
-    console.log(req.body.name.length)
+    
       res.status(201).json({newItem})
   })
   .catch(err => {
@@ -63,10 +63,9 @@ server.post('/api/zoos', (req,res) => {
 
 server.delete('/api/zoos/:id', async (req, res) => {
   const id = await Zoos.findById(req.params.id)
-  //console.log(id.length)
   Zoos.remove(req.params.id)
   .then(zoo => {
-    //console.log(`the length of the id is ${id.length}`)
+  
     if (id.length !== 0) {
       res.status(200).json({message: 'You have deleted this item'})
     } else {
