@@ -1,23 +1,23 @@
 const express = require('express');
 const helmet = require('helmet');
-const knex = require('knex');
+// const knex = require('knex');
 const server = express();
+const Zoos= require('./zoos/zoos-model.js')
 
-
-const knexConfig = {
-  client: 'sqlite3',
-  connection: {
-    filename: './data/lambda.db3'
-  },
-  useNullAsDefault: true
-}
-const db = knex(knexConfig)
+// const knexConfig = {
+//   client: 'sqlite3',
+//   connection: {
+//     filename: './data/lambda.db3'
+//   },
+//   useNullAsDefault: true
+// }
+// const db = knex(knexConfig)
 server.use(express.json());
 server.use(helmet());
 
 // endpoints here
 server.get('/api/zoos', (req, res) => {
-  db('zoos')
+  Zoos.find()
   .then(zoos => {
     res.status(200).json({zoos})
   })
@@ -27,9 +27,9 @@ server.get('/api/zoos', (req, res) => {
 })
 
 server.get('/api/zoos/:id', async (req, res) => {
-  const id = await db('zoos').where({id: req.params.id})
+  const id = await Zoos.findById(req.params.id)
   //console.log(id.length)
-  db('zoos').where({id: req.params.id})
+  Zoos.findById(req.params.id)
   .then(zoo => {
     //console.log(`the length of the id is ${id.length}`)
     if (id.length !== 0) {
