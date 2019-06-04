@@ -26,6 +26,23 @@ server.get('/api/zoos', (req, res) => {
   })
 })
 
+server.get('/api/zoos/:id', async (req, res) => {
+  const id = await db('zoos').where({id: req.params.id})
+  //console.log(id.length)
+  db('zoos').where({id: req.params.id})
+  .then(zoo => {
+    //console.log(`the length of the id is ${id.length}`)
+    if (id.length !== 0) {
+      res.status(200).json({zoo})
+    } else {
+      res.status(404).json({message: 'That zoo does not exist'})
+    }
+  })
+  .catch(err => {
+    res.status(500).json({message: err})
+  })
+})
+
 server.post('/api/zoos', (req,res) => {
   db('zoos').insert(req.body, 'id')
   .then(newItem => {
@@ -35,9 +52,9 @@ server.post('/api/zoos', (req,res) => {
   .catch(err => {
     console.log(err.errno)
     if (err.errno === 19) {
-      res.status(401).json({message: 'Please provide content'})
+      res.status(404).json({message: 'Please provide content'})
     } else if (err.errno === 1) {
-      res.status(401).json({message: 'Please provide a name'})
+      res.status(404).json({message: 'Please provide a name'})
     } else {
       res.status(500).json({message: err})
     }
