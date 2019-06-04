@@ -61,6 +61,23 @@ server.post('/api/zoos', (req,res) => {
   })
 })
 
+server.delete('/api/zoos/:id', async (req, res) => {
+  const id = await db('zoos').where({id: req.params.id})
+  //console.log(id.length)
+  db('zoos').where({id: req.params.id}).del()
+  .then(zoo => {
+    //console.log(`the length of the id is ${id.length}`)
+    if (id.length !== 0) {
+      res.status(200).json({message: 'You have deleted this item'})
+    } else {
+      res.status(404).json({message: 'That zoo does not exist'})
+    }
+  })
+  .catch(err => {
+    res.status(500).json({message: err})
+  })
+})
+
 const port = 3300;
 server.listen(port, function() {
   console.log(`\n=== Web API Listening on http://localhost:${port} ===\n`);
