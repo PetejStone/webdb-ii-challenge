@@ -78,6 +78,30 @@ server.delete('/api/zoos/:id', async (req, res) => {
   })
 })
 
+server.put('/api/zoos/:id', async (req, res) => {
+  const id = await db('zoos').where({id: req.params.id})
+  //console.log(id.length)
+  db('zoos').where({id: req.params.id}).update(req.body)
+  .then(zoo => {
+    //console.log(`the length of the id is ${id.length}`)
+    if (id.length !== 0) {
+      res.status(200).json({zoo})
+    } else {
+      res.status(404).json({message: 'That zoo does not exist'})
+    }
+  })
+  .catch(err => {
+    console.log(err.errno)
+    if (err.errno === undefined) {
+      res.status(404).json({message: 'Please provide content'})
+    } else if (err.errno === 1) {
+      res.status(404).json({message: 'Please provide a name'})
+    } else {
+      res.status(500).json({message: err})
+    }
+  })
+})
+
 const port = 3300;
 server.listen(port, function() {
   console.log(`\n=== Web API Listening on http://localhost:${port} ===\n`);
