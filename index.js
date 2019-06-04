@@ -26,6 +26,24 @@ server.get('/api/zoos', (req, res) => {
   })
 })
 
+server.post('/api/zoos', (req,res) => {
+  db('zoos').insert(req.body, 'id')
+  .then(newItem => {
+    console.log(req.body.name.length)
+      res.status(201).json({newItem})
+  })
+  .catch(err => {
+    console.log(err.errno)
+    if (err.errno === 19) {
+      res.status(401).json({message: 'Please provide content'})
+    } else if (err.errno === 1) {
+      res.status(401).json({message: 'Please provide a name'})
+    } else {
+      res.status(500).json({message: err})
+    }
+  })
+})
+
 const port = 3300;
 server.listen(port, function() {
   console.log(`\n=== Web API Listening on http://localhost:${port} ===\n`);
